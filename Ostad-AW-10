@@ -1,0 +1,177 @@
+#1. 
+// BankAccount.java
+public class BankAccount {
+    protected double balance;
+
+    public BankAccount(double initialBalance) {
+        this.balance = initialBalance;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposited: " + amount + ". New balance: " + balance);
+        } else {
+            System.out.println("Deposit amount must be positive.");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrew: " + amount + ". New balance: " + balance);
+        } else {
+            System.out.println("Withdrawal amount must be positive and less than or equal to the balance.");
+        }
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}
+
+// SavingsAccount.java
+public class SavingsAccount extends BankAccount {
+    private double withdrawalLimit;
+
+    public SavingsAccount(double initialBalance, double withdrawalLimit) {
+        super(initialBalance);
+        this.withdrawalLimit = withdrawalLimit;
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance && amount <= withdrawalLimit) {
+            balance -= amount;
+            System.out.println("Savings Account - Withdrew: " + amount + ". New balance: " + balance);
+        } else {
+            System.out.println("Savings Account - Withdrawal amount must be positive, less than or equal to the balance, and within the withdrawal limit.");
+        }
+    }
+}
+
+// CheckingAccount.java
+public class CheckingAccount extends BankAccount {
+    private double overdraftLimit;
+    private double fee;
+
+    public CheckingAccount(double initialBalance, double overdraftLimit, double fee) {
+        super(initialBalance);
+        this.overdraftLimit = overdraftLimit;
+        this.fee = fee;
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount > 0 && (balance - amount) >= -overdraftLimit) {
+            balance -= (amount + fee);
+            System.out.println("Checking Account - Withdrew: " + amount + ". Fee: " + fee + ". New balance: " + balance);
+        } else {
+            System.out.println("Checking Account - Withdrawal amount must be positive and within the overdraft limit.");
+        }
+    }
+}
+
+// Main.java
+public class Main {
+    public static void main(String[] args) {
+        BankAccount savings = new SavingsAccount(1000, 500);
+        BankAccount checking = new CheckingAccount(1000, 200, 5);
+
+        System.out.println("Initial Savings Account Balance: " + savings.getBalance());
+        savings.deposit(200);
+        savings.withdraw(300);
+        savings.withdraw(600);  // Should fail due to withdrawal limit
+
+        System.out.println("\nInitial Checking Account Balance: " + checking.getBalance());
+        checking.deposit(200);
+        checking.withdraw(300);
+        checking.withdraw(1200);  // Should fail due to overdraft limit
+    }
+}
+
+
+
+#2.
+// Shape.java
+public abstract class Shape {
+    public abstract void draw();
+    public abstract double calculateArea();
+}
+
+// Circle.java
+public class Circle extends Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Circle");
+    }
+
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+// Square.java
+public class Square extends Shape {
+    private double side;
+
+    public Square(double side) {
+        this.side = side;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Square");
+    }
+
+    @Override
+    public double calculateArea() {
+        return side * side;
+    }
+}
+
+// Triangle.java
+public class Triangle extends Shape {
+    private double base;
+    private double height;
+
+    public Triangle(double base, double height) {
+        this.base = base;
+        this.height = height;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Triangle");
+    }
+
+    @Override
+    public double calculateArea() {
+        return 0.5 * base * height;
+    }
+}
+
+// Main.java
+public class Main {
+    public static void main(String[] args) {
+        Shape circle = new Circle(5);
+        Shape square = new Square(4);
+        Shape triangle = new Triangle(3, 6);
+
+        circle.draw();
+        System.out.println("Circle Area: " + circle.calculateArea());
+
+        square.draw();
+        System.out.println("Square Area: " + square.calculateArea());
+
+        triangle.draw();
+        System.out.println("Triangle Area: " + triangle.calculateArea());
+    }
+}
